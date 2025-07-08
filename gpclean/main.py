@@ -1,5 +1,5 @@
 import logging 
-from gpclean.logging_setup import wtflogset
+from logging_setup import wtflogset
 wtflogset()
 # 루트 로거 설정
 try:
@@ -15,10 +15,10 @@ logging.info(f" Loaded {USING_QT}")
 
 
 import sys
-from gpclean.ui.login.login_view import LoginView
-from gpclean.ui.login.login_controller import Receiver
-from gpclean.ui.main.model import SubmissionDataModel
-from gpclean.ui.main.view import Submitter
+from ui.login.login_view import LoginView
+from ui.login.login_controller import Receiver
+from ui.main.model import SubmissionDataModel
+from ui.main.view import Submitter
 login_window = None  # 전역 변수로 유지
 
 def launch_login_ui():

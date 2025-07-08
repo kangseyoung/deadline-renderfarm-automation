@@ -3,7 +3,7 @@ import os
 import sys
 
 def wtflogset():
-    log_dir = "D:/new_maya"  # 로그 파일 경로
+    log_dir = "D:/log"  # 로그 파일 경로
     os.makedirs(log_dir, exist_ok=True)
     log_path = os.path.join(log_dir, "gpclean.log")
 
