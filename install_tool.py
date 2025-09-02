@@ -24,3 +24,19 @@ shutil.copytree(source_dir, maya_scripts_dir / "gpclean", dirs_exist_ok=True)
 shutil.copy("D:/gitclonetest/gp/userSetup.py", maya_scripts_dir / "userSetup.py")
 
 print("[+] 설치 완료! 마야를 실행하면 gpclean 이 자동 로드됩니다.")
+
+# 🔹 Blender 애드온 파일 복사 (필요 시 버전 수정!)
+
+
+
+blender_addon_dir = Path.home() / "AppData" / "Roaming" / "Blender Foundation" / "Blender" / "3.6" / "scripts" / "addons"
+addon_file = script_dir / "C:/Users/User/OneDrive/Desktop/gp-clean/gpclean/blender/addon.py.py"  # 너가 만든 애드온 파일명
+blender_addon_file_dst = blender_addon_dir / "gpclean_blender_addon.py"
+
+# 디렉토리 없으면 생성
+blender_addon_dir.mkdir(parents=True, exist_ok=True)
+
+# 파일 복사
+shutil.copy(addon_file, blender_addon_file_dst)
+print(f"[+] Blender 애드온 설치 완료 → {blender_addon_file_dst}")
+print("[📌] 블렌더 Preferences → Add-ons → 'GP Clean Blender Addon' 검색 후 체크하세요!")
