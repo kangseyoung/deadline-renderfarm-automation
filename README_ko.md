@@ -19,7 +19,7 @@ Phoenix Render Farm System은 공유 컴퓨터 실습실 환경을 위한 Deadli
 - 씬 파일과 에셋이 항상 일관된 공유 경로를 통해 제공되지 않았습니다.
 - 장비마다 경로, OCIO 설정, 라이선스 변수가 달라 MayaBatch 및 Arnold 작업이 실패할 수 있었습니다.
 - 예약과 사용 제어가 렌더 제출 워크플로우 밖에서 처리되었습니다.
-- 운영자는 Worker, NAS, Deadline, DCC 장애를 수동으로 진단해야 했습니다.
+- 병목 현상 발생
 
 ## Solution
 
