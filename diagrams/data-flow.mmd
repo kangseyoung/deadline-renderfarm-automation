@@ -1,0 +1,19 @@
+%% Designed/deployed data flow from the technical paper.
+%% Private logs, deployment configs, and Apps Script source are not included.
+flowchart TD
+    Reservation[Reservation Data] --> Sheet[Google Sheets]
+    Sheet --> Sync[Apps Script or Python Sync]
+    Sync --> AuthDB[(MongoDB auth/reservation collections)]
+
+    Login[Login Form] --> UI[PySide UI]
+    UI --> AuthDB
+    Scene[DCC Scene Data] --> Adapter[Maya or Blender Adapter]
+    Adapter --> JobSpec[SceneInfo / RenderSettings / JobSpec]
+    JobSpec --> JobInfo[Deadline job_info and plugin_info]
+
+    JobInfo --> Deadline[Deadline Queue]
+    Deadline --> WorkerTasks[Worker Task Execution]
+    WorkerTasks --> NASInput[NAS Input / Project Data]
+    WorkerTasks --> NASOutput[NAS Output]
+    WorkerTasks --> Logs[Deadline Task Logs]
+    Logs --> OpsNotes[Sanitized Operator Notes]

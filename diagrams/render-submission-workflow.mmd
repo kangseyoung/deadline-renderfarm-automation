@@ -1,0 +1,22 @@
+%% Designed/deployed workflow from the technical paper.
+%% The public repo contains the source snapshot for parts of this flow.
+sequenceDiagram
+    actor User
+    participant Sheet as Google Sheets
+    participant Mongo as MongoDB
+    participant UI as PySide UI
+    participant DCC as Maya/Blender Adapter
+    participant Deadline as Deadline
+    participant Worker as Worker PCs
+    participant NAS as NAS Storage
+
+    User->>Sheet: Reserve render slot
+    Sheet->>Mongo: Sync reservation data
+    User->>UI: Log in during reserved slot
+    UI->>Mongo: Validate user and reservation
+    UI->>DCC: Gather scene and render settings
+    DCC->>UI: Return job metadata
+    UI->>Deadline: Submit job with deadlinecommand
+    Deadline->>Worker: Assign frame tasks
+    Worker->>NAS: Read scene/assets and write output
+    User->>Deadline: Monitor job/task status

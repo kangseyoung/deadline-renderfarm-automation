@@ -1,0 +1,22 @@
+%% Designed/deployed system from the technical paper.
+%% Not every deployment component is included in this public source snapshot.
+flowchart LR
+    User[Lab User] --> Sheet[Google Sheets Reservation]
+    Sheet --> GAS[Google Apps Script]
+    GAS --> Mongo[(UI MongoDB)]
+
+    User --> UI[PySide Submission UI]
+    UI --> Mongo
+    UI --> Adapter[DCC Adapter Layer]
+    Adapter --> DeadlineCmd[deadlinecommand SubmitJob]
+
+    DeadlineCmd --> Repo[Deadline Repository]
+    Repo --> DeadlineDB[(Deadline Database)]
+    Repo --> Monitor[Deadline Monitor]
+    Repo --> Workers[20 Deadline Workers]
+
+    Workers --> Maya[MayaBatch / Arnold]
+    Workers --> Blender[Blender Batch]
+    Maya --> NAS[NAS Shared Storage]
+    Blender --> NAS
+    NAS --> Output[Rendered Output]
