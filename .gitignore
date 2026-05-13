@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.secret
+*.key
+*.pem
+*credentials*.json
+*creds*.json
+google_creds.json
+service-account*.json
+
+# Logs and generated runtime files
+*.log
+logs/
+tmp/
+temp/
+*_job_info.txt
+*_plugin_info.txt
+
+# Private reference material
+agent_reference/
+
+# Local data exports
+*.xlsx
+*.xls
+*.csv
+
+# DCC/cache artifacts
+*.blend1
+*.ma~
+*.mb~
+*.ass
+*.tx
+*.exr
+*.abc
+

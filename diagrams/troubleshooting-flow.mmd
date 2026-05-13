@@ -1,0 +1,27 @@
+%% Public-safe operational triage flow based on the technical paper and notes.
+flowchart TD
+    Fail[Render job failed or stalled] --> Reached{Job reached Deadline?}
+    Reached -- No --> SubmitCheck[Check UI submission, deadlinecommand, MongoDB reservation]
+    Reached -- Yes --> Workers{Workers online?}
+    Workers -- No --> WorkerFix[Restart Worker, check network, pool/group, permissions]
+    Workers -- Yes --> Logs[Open failed task log]
+
+    Logs --> Category{Failure category}
+    Category --> DB[MongoDB / reservation]
+    Category --> Repo[Repository access]
+    Category --> License[Arnold license]
+    Category --> OCIO[OCIO config]
+    Category --> Path[NAS / UNC path]
+    Category --> DCC[DCC plugin or scene issue]
+
+    DB --> Fix[Apply fix and document sanitized cause]
+    Repo --> Fix
+    License --> Fix
+    OCIO --> Fix
+    Path --> Fix
+    DCC --> Fix
+
+    Fix --> Test[Render small frame range]
+    Test --> Requeue{Successful?}
+    Requeue -- Yes --> Full[Requeue full job]
+    Requeue -- No --> Logs
