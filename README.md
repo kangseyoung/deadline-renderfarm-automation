@@ -127,3 +127,17 @@ See [docs/security-notes.md](docs/security-notes.md).
 ## Paper
 
 The final technical paper is used as private reference for architecture, results, and project claims. It is not committed to this repository. A public paper link can be added later only after redacting sensitive infrastructure, account, license, and identity data.
+
+## AI Usage
+
+AI was used as a development assistant during the documentation and implementation process, not as a replacement for project ownership. I defined the project requirements, VFX pipeline constraints, Deadline render-farm workflow, and public-safe documentation scope, then reviewed and revised AI-assisted suggestions to match the actual system.
+
+In this project, AI helped with:
+
+- Organizing the initial architecture ideas for the Deadline, PySide, MongoDB, Google Sheets, NAS, Maya/Arnold, and Blender workflow.
+- Drafting and refining documentation structure for the public portfolio version while keeping private infrastructure details redacted.
+- Reviewing repetitive Python implementation patterns around DCC adapters, job/plugin info generation, path handling, and preflight checks.
+- Analyzing error categories from Deadline, MayaBatch, Arnold license setup, OCIO, NAS paths, and Worker configuration to build a clearer troubleshooting guide.
+- Checking refactoring directions and validation checklists for the render submission workflow.
+
+All final README content and code-level claims were checked against the repository source snapshot, public documentation, and private project context before being included.

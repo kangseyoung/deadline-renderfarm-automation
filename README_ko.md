@@ -124,6 +124,20 @@ flowchart LR
 
 자세한 내용은 [docs/security-notes.md](docs/security-notes.md)를 참고하세요.
 
+## AI 활용 방식
+
+이 프로젝트에서는 AI를 단순 코드 생성 도구가 아니라 개발 보조 도구로 활용했습니다. 프로젝트 요구사항, VFX 파이프라인 제약, Deadline 기반 렌더팜 흐름, 공개 문서화 범위는 직접 정의했고, AI가 제안한 내용은 실제 코드와 프로젝트 맥락에 맞게 검토하고 수정했습니다.
+
+AI는 다음 작업을 정리하는 데 도움을 주었습니다.
+
+- Deadline, PySide, MongoDB, Google Sheets, NAS, Maya/Arnold, Blender로 이어지는 시스템 구조 아이디어 정리
+- 공개 포트폴리오용 README와 문서 구조 초안 작성 및 보안 정보 redaction 기준 검토
+- DCC 어댑터, Deadline job/plugin info 생성, 경로 처리, preflight check 등 반복적인 Python 구현 패턴 검토
+- Deadline Worker, MayaBatch, Arnold 라이선스, OCIO, NAS 경로 문제와 같은 오류 유형 분석 및 디버깅 방향 정리
+- 렌더 제출 워크플로의 리팩토링 방향과 검증 체크리스트 작성
+
+최종 문서와 코드 설명은 저장소의 공개 소스, 문서, 실제 프로젝트 맥락을 기준으로 직접 확인한 뒤 반영했습니다.
+
 ## Paper
 
 최종 기술 논문은 아키텍처, 결과, 프로젝트 claim에 대한 비공개 참고 자료로 사용됩니다. 이 논문은 저장소에 커밋되어 있지 않습니다. 민감한 인프라, 계정, 라이선스, 신원 정보가 redaction된 이후에만 공개 논문 링크를 추가할 수 있습니다.
