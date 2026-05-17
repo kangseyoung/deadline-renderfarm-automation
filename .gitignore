@@ -33,6 +33,7 @@ temp/
 
 # Private reference material
 agent_reference/
+gpclean/
 
 # Local data exports
 *.xlsx
