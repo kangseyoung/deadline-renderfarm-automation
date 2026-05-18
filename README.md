@@ -4,13 +4,13 @@ Phoenix Render Farm System is a Deadline-based render farm automation project fo
 
 This repository contains the public-safe source snapshot and documentation for the capstone project. Some deployment scripts and raw operational logs are excluded or redacted for security.
 
-In the final evaluation reported in the private technical paper, a 240-frame scene that took about **9h 10m on a single PC** completed in about **26-32m on 20 Deadline Workers**.
+In the final evaluation reported in the technical paper, a 240-frame scene that took about **9h 10m on a single PC** completed in about **26-32m on 20 Deadline Workers**.
 
 ## Overview
 
 The project addresses a VFX pipeline problem: many users need to render large Maya or Blender scenes on a fixed pool of lab machines, but manual rendering causes path errors, license conflicts, unfair machine usage, and repeated setup work after lab PCs reset.
 
-This repository contains public documentation plus a source snapshot of the submission-side tooling. The final technical paper is kept as private reference material unless a redacted public version is added later.
+This repository contains public documentation plus a source snapshot of the submission-side tooling. A redacted public version of the technical paper is available at [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf).
 
 ## Problem
 
@@ -126,7 +126,7 @@ See [docs/security-notes.md](docs/security-notes.md).
 
 ## Paper
 
-The final technical paper is used as private reference for architecture, results, and project claims. It is not committed to this repository. A public paper link can be added later only after redacting sensitive infrastructure, account, license, and identity data.
+The redacted public technical paper is included at [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf). Private source material, raw logs, credentials, account details, infrastructure identifiers, and unredacted paper copies must remain outside this repository.
 
 ## AI Usage
 
