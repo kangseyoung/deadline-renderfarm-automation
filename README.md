@@ -100,6 +100,8 @@ The performance result is reported from the final technical paper; sanitized raw
 ├── ShaderSetup.py              # Maya shader helper implementation
 ├── userSetup.py                # DCC startup hook
 ├── docs/                       # Public documentation
+│   ├── project-timelog.md      # Sanitized graduation-project time log
+│   └── technical_paper_redacted.pdf
 ├── diagrams/                   # Mermaid architecture/workflow sources
 └── screenshots/                # Placeholder guidance for future redacted screenshots
 ```
@@ -127,6 +129,8 @@ See [docs/security-notes.md](docs/security-notes.md).
 ## Paper
 
 The redacted public technical paper is included at [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf). Private source material, raw logs, credentials, account details, infrastructure identifiers, and unredacted paper copies must remain outside this repository.
+
+The sanitized graduation-project time log is available at [docs/project-timelog.md](docs/project-timelog.md).
 
 ## AI Usage
 
