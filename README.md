@@ -1,148 +1,155 @@
 # Deadline Render Farm Automation System
 
-Phoenix Render Farm System is a Deadline-based render farm automation project for a shared computer lab. It combines render infrastructure, a PySide submission UI, MongoDB-backed user and reservation data, Google Sheets reservation operations, NAS shared storage policy, and DCC-specific Maya/Arnold and Blender submission flows.
+Deadline Render Farm Automation System is a graduation project focused on render-farm infrastructure, render submission automation, and lab-scale operation. It connects a PySide-based submission UI, MongoDB reservation/auth data, NAS shared-path policy, and Deadline job submission for Maya/Arnold and Blender workflows.
 
-This repository contains the public-safe source snapshot and documentation for the capstone project. Some deployment scripts and raw operational logs are excluded or redacted for security.
+This repository is the public portfolio snapshot. Private infrastructure values, raw logs, credentials, license details, unredacted screenshots, and original internal notes are intentionally excluded or redacted.
 
-In the final evaluation reported in the technical paper, a 240-frame scene that took about **9h 10m on a single PC** completed in about **26-32m on 20 Deadline Workers**.
+## Portfolio Baseline
 
-## Overview
+- **Portfolio branch:** `main`
+- **What to review:** this README, `gpclean/`, `docs/architecture.md`, `docs/troubleshooting.md`, and `docs/implementation.md`
+- **Branch note:** older `master`, `backup`, `final`, and experiment branches are kept only as development history unless stated otherwise. See [docs/branch-guide.md](docs/branch-guide.md).
 
-The project addresses a VFX pipeline problem: many users need to render large Maya or Blender scenes on a fixed pool of lab machines, but manual rendering causes path errors, license conflicts, unfair machine usage, and repeated setup work after lab PCs reset.
+## Project Focus
 
-This repository contains public documentation plus a source snapshot of the submission-side tooling. A redacted public version of the technical paper is available at [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf).
+This is not only a VFX tool. The main work was designing and validating a practical render-farm automation flow for a shared computer lab:
 
-## Problem
+- Deadline Repository / Database / Worker based render-farm structure
+- NAS shared-path policy for scene input and render output
+- MayaBatch/Arnold and Blender render submission flow
+- PySide login and submission UI wiring
+- MongoDB-backed reservation/auth/status data handling
+- Deadline `SubmitJob` command integration
+- Worker, license, OCIO, NAS, and path troubleshooting documentation
 
-Before the system, rendering depended heavily on individual PC setup and manual coordination.
+## Implemented in This Repository
 
-- Scene files and assets were not always available through a consistent shared path.
-- MayaBatch and Arnold jobs could fail when paths, OCIO settings, or license variables differed by machine.
-- Reservation and usage control were handled outside the render submission workflow.
-- Operators had to diagnose Worker, NAS, Deadline, and DCC failures manually.
+- **Deadline job submission package:** `gpclean/gpclean_submit/`
+  - Builds Deadline `job_info` and `plugin_info` files.
+  - Calls `deadlinecommand SubmitJob`.
+  - Supports MayaBatch and Blender plugin info generation.
+  - Provides DCC adapters for Maya and Blender scene/render metadata.
+- **PySide UI flow:** `gpclean/ui/`
+  - Login UI and submission UI structure.
+  - File drop / scene context flow.
+  - Submission button path connected to the Deadline submission layer.
+- **MongoDB integration:** `gpclean/backend/authDB/`
+  - Auth and reservation collection access through environment-configured MongoDB.
+  - Google Sheets reservation sync script using a private service-account path from environment variables.
+- **Infrastructure documentation:**
+  - Architecture, operation, troubleshooting, security cleanup, branch guide, and public-safe project timelog.
+- **Public-safe technical paper:**
+  - Redacted paper is available at [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf).
 
-## Solution
+## Implemented / Documented Outside the Public Snapshot
 
-The final system was designed and documented as an infrastructure automation workflow:
+Some deployment pieces are documented from the final project but are not published as raw source because they contain private infrastructure details:
 
-- Deadline Repository, Database, and Worker model for distributed rendering.
-- 20 Worker PCs configured for parallel frame processing, documented in the technical paper.
-- NAS-backed shared storage with a UNC path policy for scene input and render output.
-- PySide-based UI for login, scene context, and render submission flow.
-- MongoDB collections for authentication and reservation/status data.
-- Google Sheets / Google Apps Script reservation process for shared lab scheduling, documented in the technical paper.
-- Deadline command submission support for MayaBatch/Arnold and Blender jobs.
-- Operational troubleshooting process for license, OCIO, NAS, Worker, and path failures.
+- Full Deadline Repository/Database server configuration
+- Private Google Apps Script project
+- Raw Deadline logs and benchmark logs
+- Real NAS paths, machine names, IP addresses, license server values, and account data
+- Unredacted screenshots and original internal notes
 
-The public source snapshot includes the PySide/MongoDB/Deadline submission-side code. It does not include the private Apps Script project, raw Deadline logs, full Deadline Repository configuration, or private deployment scripts.
+## Planned Improvements
 
-## System Architecture
+- Replace older duplicated Blender-side package code with one shared package layout.
+- Add automated tests for `job_info` / `plugin_info` generation.
+- Add a safer CLI wrapper for local validation before calling `deadlinecommand`.
+- Improve status polling from Deadline/MongoDB into the UI.
+- Add sanitized example screenshots after redaction review.
+
+## Architecture
 
 ```mermaid
 flowchart LR
-    User[User] --> Sheet[Google Sheets Reservation]
+    User[User] --> UI[PySide Submission UI]
+    User --> Sheet[Google Sheets Reservation]
     Sheet --> GAS[Google Apps Script]
     GAS --> Mongo[(MongoDB)]
-    User --> UI[PySide Submission UI]
     UI --> Mongo
-    UI --> DeadlineCmd[deadlinecommand SubmitJob]
-    DeadlineCmd --> Repo[Deadline Repository]
+    UI --> Submit[Deadline SubmitJob]
+    Submit --> Repo[Deadline Repository]
     Repo --> DDB[(Deadline Database)]
-    Repo --> Workers[20 Deadline Workers]
+    Repo --> Workers[Deadline Workers]
     Workers --> NAS[NAS Shared Storage]
     NAS --> Output[Rendered Output]
     Workers --> Monitor[Deadline Monitor]
 ```
 
-This diagram represents the designed/deployed system described in the technical paper. Not every deployment component is present as source code in this public snapshot. See [docs/architecture.md](docs/architecture.md) and the Mermaid sources in [diagrams/](diagrams/).
+Detailed architecture is documented in [docs/architecture.md](docs/architecture.md).
 
 ## Tech Stack
 
-- Render management: AWS Thinkbox Deadline 10.4
-- DCC/rendering: MayaBatch, Arnold, Blender
-- UI: Python, PySide6 with PySide2 fallback in code
-- Data: MongoDB, pymongo
-- Reservation operations: Google Sheets, Google Apps Script, Google Sheets API. Apps Script is documented in the paper, but not included as public source.
-- Storage: NAS shared storage with UNC path policy
-- Platform: Windows lab PCs with Deep Freeze constraints
-
-## Key Features
-
-- Reservation-first render farm workflow.
-- MongoDB-backed login and reservation lookup.
-- Deadline job/plugin info generation for MayaBatch and Blender.
-- DCC adapters for gathering scene file, frame range, renderer, version, output path, and camera data.
-- Preflight checks for scene path and frame range.
-- Operational patterns for Worker status checks, Deadline log review, and error recording.
-- Public documentation that redacts infrastructure identifiers and credentials.
+- **Language/UI:** Python, PySide6/PySide2
+- **Render management:** AWS Thinkbox Deadline 10
+- **DCC/rendering:** MayaBatch, Arnold, Blender
+- **Data:** MongoDB, Google Sheets API
+- **Automation:** Deadline command-line submission, Google Apps Script workflow documentation
+- **Storage/infra:** NAS shared storage, UNC path policy, Windows lab PCs
 
 ## Results
 
-The final paper reports evaluation on 20 Worker PCs:
+The final technical paper reports evaluation on 20 Worker PCs:
 
-- Single-PC render time for a 240-frame scene: about 9h 10m.
-- 20-Worker render farm completion time: about 26-32m.
-- Reported overall improvement: about 17-20x in total completion time for the tested scene.
+- Single-PC render time for a 240-frame scene: about 9h 10m
+- 20-Worker render-farm completion time: about 26-32m
+- Reported improvement: about 17-20x for the tested scene
 
-The performance result is reported from the final technical paper; sanitized raw benchmark logs are not included in this public snapshot. Reproducing the exact numbers therefore needs verification from redacted benchmark artifacts.
+Sanitized raw benchmark logs are not included in this public repository.
 
 ## Repository Structure
 
 ```text
 .
-├── gpclean/                    # Main Python package
-│   ├── main.py                 # PySide UI launch path
-│   ├── ui/                     # Login, submitter, file-drop UI
-│   ├── backend/authDB/         # MongoDB auth/reservation scripts
-│   └── gpclean_submit/         # Deadline submission package
-├── blender/gpclean/            # Blender-oriented duplicated package tree
-├── ShaderMain.py               # Maya shader helper script
-├── ShaderSetup.py              # Maya shader helper implementation
-├── userSetup.py                # DCC startup hook
+├── gpclean/                    # Main Python source snapshot
+│   ├── gpclean_submit/         # Deadline submission package
+│   ├── ui/                     # Login, file-drop, and submission UI
+│   └── backend/authDB/         # MongoDB/auth/reservation scripts
+├── blender/gpclean/            # Older Blender-oriented duplicated package tree
 ├── docs/                       # Public documentation
-│   ├── project-timelog.md      # Sanitized graduation-project time log
-│   ├── project-timelog-ko.md   # Korean version of the sanitized time log
+│   ├── architecture.md
+│   ├── branch-guide.md
+│   ├── security-cleanup.md
+│   ├── troubleshooting.md
+│   ├── project-timelog.md
+│   ├── project-timelog-ko.md
 │   └── technical_paper_redacted.pdf
 ├── diagrams/                   # Mermaid architecture/workflow sources
-└── screenshots/                # Placeholder guidance for future redacted screenshots
+├── screenshots/                # Redacted screenshot area, currently minimal
+├── .env.example                # Placeholder-only environment template
+└── README_ko.md                # Korean README
 ```
 
-## Troubleshooting Highlights
+## Configuration
 
-Common production failure points were documented around:
+Copy `.env.example` to a private `.env` file and replace placeholders locally. Do not commit `.env`, credentials, service-account JSON files, license files, real server paths, IP addresses, or screenshots containing infrastructure values.
 
-- MongoDB connectivity or bind/firewall issues.
-- Deadline Repository or shared path access failure.
-- Offline Workers or misconfigured Worker permissions.
-- Arnold license environment failure.
-- OCIO configuration errors in MayaBatch.
-- NAS/UNC path mismatches.
-- User scene/output path mistakes.
+Important environment variables include:
 
-See [docs/troubleshooting.md](docs/troubleshooting.md).
+- `MONGODB_URI`
+- `DEADLINE_COMMAND`
+- `DEADLINE_REPOSITORY`
+- `NAS_ROOT`
+- `GOOGLE_SERVICE_ACCOUNT_JSON`
+- `ARNOLD_LICENSE_SERVER`
+- `OCIO_CONFIG`
 
 ## Security Notes
 
-This public repo must not include real IP addresses, NAS paths, license servers, MongoDB URIs, Google Sheet URLs, passwords, API keys, student IDs, private account names, or internal server names. Public docs use placeholders such as `<nas-server-ip>`, `<license-server-ip>`, `<mongodb-uri>`, `<google-sheet-url>`, `<student-id>`, `<internal-path>`, `<internal-server-name>`, `<private-account>`, and `<secret>`.
+This repository previously contained or referenced sensitive development artifacts during the project history. Any exposed password, token, credential file, account, IP address, or license value must be considered compromised and replaced. Current public files use placeholders where infrastructure values are needed.
 
-See [docs/security-notes.md](docs/security-notes.md).
+See [docs/security-cleanup.md](docs/security-cleanup.md) and [docs/security-notes.md](docs/security-notes.md).
 
-## Paper
+## Documentation
 
-The redacted public technical paper is included at [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf). Private source material, raw logs, credentials, account details, infrastructure identifiers, and unredacted paper copies must remain outside this repository.
-
-The sanitized graduation-project time log is available in [English](docs/project-timelog.md) and [Korean](docs/project-timelog-ko.md).
+- [Architecture](docs/architecture.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [Branch Guide](docs/branch-guide.md)
+- [Security Cleanup](docs/security-cleanup.md)
+- [Project Timelog](docs/project-timelog.md)
+- [Korean Project Timelog](docs/project-timelog-ko.md)
 
 ## AI Usage
 
-AI was used as a development assistant during the documentation and implementation process, not as a replacement for project ownership. I defined the project requirements, VFX pipeline constraints, Deadline render-farm workflow, and public-safe documentation scope, then reviewed and revised AI-assisted suggestions to match the actual system.
-
-In this project, AI helped with:
-
-- Organizing the initial architecture ideas for the Deadline, PySide, MongoDB, Google Sheets, NAS, Maya/Arnold, and Blender workflow.
-- Drafting and refining documentation structure for the public portfolio version while keeping private infrastructure details redacted.
-- Reviewing repetitive Python implementation patterns around DCC adapters, job/plugin info generation, path handling, and preflight checks.
-- Analyzing error categories from Deadline, MayaBatch, Arnold license setup, OCIO, NAS paths, and Worker configuration to build a clearer troubleshooting guide.
-- Checking refactoring directions and validation checklists for the render submission workflow.
-
-All final README content and code-level claims were checked against the repository source snapshot, public documentation, and private project context before being included.
+AI was used as a development and documentation assistant. I defined the system requirements, render-farm workflow, VFX/lab constraints, and public-safe documentation scope, then reviewed and revised AI-assisted suggestions against the actual project context.

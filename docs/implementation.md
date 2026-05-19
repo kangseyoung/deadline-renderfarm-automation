@@ -122,16 +122,16 @@ The adapter design matches the final paper's DCC adapter concept. Support for Ho
 - `gpclean/backend/authDB/db.py`
   - Creates a MongoDB client.
   - Exposes reservation and auth collections.
-  - Uses a hardcoded local URI in code; public deployment should use `<mongodb-uri>` through environment variables.
+  - Reads MongoDB URI, database, and collection names from environment variables.
 
 - `gpclean/backend/authDB/sheetToMongo.py`
   - Reads Google Sheets using `gspread` and `oauth2client`.
   - Upserts reservation slots into MongoDB.
-  - Contains local credential path and sheet naming assumptions in code; this should be replaced by environment configuration.
+  - Reads service-account path and sheet names from environment variables.
 
 - `gpclean/backend/authDB/auth_hashed_pw.py`
   - Seeds dummy fixture auth data into MongoDB for local testing only.
-  - The sample user IDs and passwords are confirmed dummy fixtures and must not be treated as deployment credentials.
+  - Uses placeholder sample IDs/passwords only; deployment credentials must remain private.
 
 - `gpclean/backend/authDB/exel_creator.py`
   - Generates an Excel auth workbook from dummy fixture data for local testing only.

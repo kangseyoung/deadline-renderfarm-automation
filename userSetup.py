@@ -1,10 +1,15 @@
 import sys
 import logging
+import os
 from pathlib import Path
-site_packages = Path.home() / "C:" / "Users" / "user" / "Documents" / "maya" / "2023"
-if site_packages not in sys.path:
-    sys.path.append(site_packages)
-    logging.info("C:\\Users\\User\\OneDrive\\문서\\maya\\2023\\scripts sys.path.append중...")
+
+maya_script_path = os.getenv("MAYA_SCRIPT_PATH")
+if maya_script_path:
+    site_packages = Path(maya_script_path)
+    if site_packages not in sys.path:
+        sys.path.append(str(site_packages))
+        logging.info("MAYA_SCRIPT_PATH added to sys.path")
+
 try:
     from gpclean.ui.menu import create_menu
     if __name__ == "__main__":

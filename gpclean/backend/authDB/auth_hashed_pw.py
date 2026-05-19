@@ -7,7 +7,6 @@ from pymongo import MongoClient
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-
 client = MongoClient(os.getenv("MONGODB_URI", "mongodb://localhost:27017"))
 db = client[os.getenv("MONGODB_DATABASE", "student_db")]
 collection = db[os.getenv("MONGODB_AUTH_COLLECTION", "auth_collection")]

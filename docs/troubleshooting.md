@@ -1,176 +1,103 @@
 # Troubleshooting
 
-This guide is public-safe and uses placeholders instead of real infrastructure values.
+This guide summarizes common failure categories found during the render-farm project. Replace all environment-specific values with local private configuration.
 
-## Triage Flow
-
-1. Check whether the job reached Deadline.
-2. Check whether Workers are online and assigned.
-3. Open the failed task log in Deadline Monitor.
-4. Classify the error: database, Repository, Worker, license, OCIO, NAS/path, or user submission.
-5. Fix the root cause.
-6. Requeue a small frame range before requeueing the full job.
-
-## MongoDB Connection Failure
+## UNC / NAS Path Issues
 
 Symptoms:
 
-- UI login fails.
-- Reservation list does not load.
-- Reservation sync script cannot write records.
+- Worker cannot find the scene file.
+- Assets are missing only on some machines.
+- Output is written to a local path instead of shared storage.
 
 Checks:
 
-- Confirm `<mongodb-uri>` is reachable from the UI machine.
-- Confirm firewall and bind settings allow the expected client.
-- Confirm the expected database and collections exist.
-- Confirm credentials are loaded from environment variables or a private config file.
+- Confirm scene and output paths use UNC-style shared paths.
+- Avoid local drive letters for files that Workers must access.
+- Confirm all Workers can read input paths and write output paths.
+- Confirm NAS permissions are consistent for lab users and Worker accounts.
 
-Resolution:
-
-- Restart MongoDB service if appropriate.
-- Correct bind/firewall settings.
-- Verify collection names used by the UI and sync script.
-
-## Deadline Repository Access Failure
+## Deadline Worker Permission Issues
 
 Symptoms:
 
-- Worker cannot start or connect.
-- Job submission fails after `deadlinecommand SubmitJob`.
-- Workers report missing Repository or plugin files.
+- Worker starts but cannot execute jobs.
+- Job stays queued or fails immediately.
+- Deadline client configuration path is not writable/readable.
 
 Checks:
 
-- Confirm Repository share is reachable through `\\<internal-server-name>\<internal-path>`.
-- Confirm user/Worker permissions.
-- Confirm Deadline client points to the correct Repository.
+- Confirm Worker service/user account has access to Deadline client configuration.
+- Confirm firewall allows Deadline Repository / Database communication.
+- Confirm Worker appears online in Deadline Monitor.
+- Confirm pool/group/limit settings match the submitted job.
 
-Resolution:
-
-- Restore share permissions.
-- Reconnect the Repository path.
-- Restart Deadline Worker after path or permission changes.
-
-## Worker Offline
-
-Symptoms:
-
-- Job stays queued.
-- Only a subset of frames render.
-- Deadline Monitor shows Workers offline or stalled.
-
-Checks:
-
-- Confirm the PC is powered on and network-connected.
-- Confirm Deadline Worker is running.
-- Confirm the Worker belongs to the expected pool/group.
-- Confirm Deep Freeze or reboot policy did not reset required settings.
-
-Resolution:
-
-- Restart Deadline Worker.
-- Reapply required environment settings.
-- Reconnect NAS path if needed.
-- Requeue failed tasks after the Worker is healthy.
-
-## Arnold License Failure
+## Arnold License Server / Firewall Issues
 
 Symptoms:
 
 - MayaBatch starts but Arnold render fails.
-- Logs mention license checkout failure or missing Arnold/mtoa authorization.
+- Logs mention license checkout failure.
+- Failure appears only on some Worker PCs.
 
 Checks:
 
-- Confirm the license server placeholder `<license-server-ip>` is reachable.
-- Confirm required variables are set for the Worker:
-  - `ADSKFLEX_LICENSE_FILE`
-  - `solidangle_LICENSE`
-  - `ARNOLD_PLUGIN_PATH`
-  - `MTOA_EXTENSIONS_PATH`
-  - `MTOA_TEMPLATES_PATH`
-- Confirm the Maya/Arnold version matches the available license policy.
+- Confirm license environment variables are configured privately.
+- Confirm license server is reachable from every Worker.
+- Confirm firewall rules allow required license ports.
+- Confirm Maya, Arnold, and mtoa versions match the available license policy.
 
-Resolution:
-
-- Reapply the Arnold license environment setup.
-- Restart Deadline Worker or reboot if system environment variables changed.
-- Test a small frame before requeueing the full job.
-
-## OCIO Config Failure
+## Environment Variable Issues
 
 Symptoms:
 
-- MayaBatch fails with an OCIO config error.
-- Render output has unexpected color management behavior.
-- Logs mention a missing or unreadable `config.ocio`.
+- MongoDB connection fails.
+- Google Sheets sync cannot find credentials.
+- Deadline command is not found.
+- OCIO or license setup differs by machine.
 
-Checks:
+Required private values should come from `.env` or machine-level environment variables:
 
-- Confirm the Worker points to the expected OCIO config.
-- Confirm the config path is accessible to Deadline Worker.
-- Confirm user-specific Maya preferences are not overriding the shared config.
+- `MONGODB_URI`
+- `DEADLINE_COMMAND`
+- `DEADLINE_REPOSITORY`
+- `NAS_ROOT`
+- `GOOGLE_SERVICE_ACCOUNT_JSON`
+- `ARNOLD_LICENSE_SERVER`
+- `OCIO_CONFIG`
 
-Resolution:
+Do not commit actual values.
 
-- Run the OCIO reset process described by the operator guide.
-- Remove stale user-level OCIO overrides.
-- Restart MayaBatch/Worker and test one frame.
-
-Repository note: the final paper describes OCIO reset tooling, but the script was not found in the final branch and needs verification.
-
-## NAS / UNC Path Issues
-
-Symptoms:
-
-- Missing texture, cache, Alembic, or scene references.
-- Render works locally but fails on Workers.
-- Output is written to the wrong local path.
-
-Checks:
-
-- Scene path starts with `\\<nas-server-ip>\<internal-path>`.
-- Output path uses the approved NAS output location.
-- Asset paths are not local drive paths.
-- Worker account has read/write permission.
-
-Resolution:
-
-- Convert local paths to UNC paths.
-- Relink missing assets through the NAS share.
-- Re-run a small test frame from a Worker.
-
-## User Submission Path Errors
+## NAS Access Permission Issues
 
 Symptoms:
 
-- UI shows an unexpected current path.
-- Output path does not include the expected user/date layout.
-- Deadline job submits but cannot find scene or output folder.
+- User can access a path but Worker cannot.
+- Output folder is not created.
+- Render succeeds locally but fails on Deadline.
 
 Checks:
 
-- Confirm the scene is saved before submission.
-- Confirm the UI detected the correct DCC.
-- Confirm output folder exists or can be created.
-- Confirm the selected reservation/user context is correct.
+- Confirm Worker account permissions on NAS input/output folders.
+- Confirm project assets are stored under the approved shared path.
+- Confirm no scene references point to a local user profile path.
+- Confirm output directory creation is allowed.
 
-Resolution:
+## DCC-Specific Issues
 
-- Save the scene under the approved NAS project folder.
-- Reopen the UI after the scene path is corrected.
-- Re-submit with a small frame range.
+Maya / Arnold:
 
-## Path Validation Failures
+- Confirm mtoa is available.
+- Confirm OCIO configuration is set consistently.
+- Confirm MayaBatch version matches the plugin configuration.
 
-The current repository includes minimal preflight checks for empty scene path and invalid frame range. Full validation should also check:
+Blender:
 
-- UNC path prefix.
-- output directory writability.
-- asset reference accessibility.
-- frame range limits.
-- supported renderer and DCC version.
+- Confirm Blender executable path is consistent across Workers.
+- Confirm scene files and output paths are accessible from Worker machines.
 
-These stronger validations are recommended future work unless verified elsewhere.
+## Logging Guidance
 
+- Logs may contain internal paths, usernames, machine names, license values, or IP addresses.
+- Do not commit raw logs.
+- Redact logs before including them in documentation.

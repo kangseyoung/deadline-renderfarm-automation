@@ -1,14 +1,7 @@
 import logging
-import os
-import sys
-
 from gpclean.logging_setup import wtflogset
 wtflogset()
 logging.info(" Receiver 모듈 로드됨")
-
-extra_site_packages = os.getenv("PYTHON_EXTRA_SITE_PACKAGES")
-if extra_site_packages:
-    sys.path.append(extra_site_packages)
 
 try:
     from PySide6.QtCore import QObject, Slot
@@ -23,7 +16,7 @@ logging.info(f"ReplaceA Loaded {USING_QT}")
 from gpclean.backend.authDB.db import auth_collection
 import hashlib
 
-
+from gpclean.ui.file_drop.file_drop_view import FileDropView
 
 class Receiver(QObject):
     logging.info(" Receiver 클래스 정의됨")
@@ -65,8 +58,15 @@ class Receiver(QObject):
         else:
             logging.info(" 학번 없음")
             QMessageBox.warning(self.view.ui, "로그인 실패", "학번이 틀렸습니다.")
+
     def open_main_win(self):
-        from gpclean.ui.main.model import SubmissionDataModel
+        from gpclean.ui.file_drop.file_drop_view import FileDropView
+
+        a = FileDropView()
+        a.show_window()
+
+
+"""from gpclean.ui.main.model import SubmissionDataModel
         from gpclean.ui.main.view import Submitter
         # 모델 생성 및 값 설정
         model = SubmissionDataModel()
@@ -76,7 +76,7 @@ class Receiver(QObject):
         __main__.main_ui = Submitter(model)
         __main__.main_ui.show()
         # 로그인 창 닫기
-        self.view.ui.close()
+        self.view.ui.close()"""
 
         
 """    def open_main_win(self):

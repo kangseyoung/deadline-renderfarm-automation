@@ -12,6 +12,8 @@ Phoenix Render Farm System은 공유 컴퓨터 실습실 환경을 위한 Deadli
 
 이 저장소에는 공개 문서와 제출 측 도구의 소스 스냅샷이 포함되어 있습니다. redaction 처리한 공개용 기술 논문은 [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf)에서 확인할 수 있습니다.
 
+채용 담당자 또는 리뷰어는 `main` 브랜치와 이 README를 기준으로 보면 됩니다. 오래된 `master`, `backup`, `final` 계열 브랜치 정리 기준은 [docs/branch-guide.md](docs/branch-guide.md)에 정리했습니다.
+
 ## Problem
 
 이 시스템 이전에는 렌더링이 개별 PC 설정과 수동 조율에 크게 의존했습니다.
@@ -70,11 +72,30 @@ flowchart LR
 
 - 예약 우선 렌더팜 워크플로우.
 - MongoDB 기반 로그인 및 예약 조회.
-- MayaBatch 및 Blender를 위한 Deadline job/plugin info 생성.
+- MayaBatch 및 Blender를 위한 Deadline `job_info` / `plugin_info` 생성.
+- `deadlinecommand SubmitJob` 기반 Deadline 제출 흐름.
 - 씬 파일, 프레임 범위, 렌더러, 버전, 출력 경로, 카메라 데이터를 수집하는 DCC 어댑터.
 - 씬 경로와 프레임 범위에 대한 preflight 검사.
 - Worker 상태 확인, Deadline 로그 리뷰, 오류 기록을 위한 운영 패턴.
 - 인프라 식별자와 자격 증명을 redaction 처리한 공개 문서.
+
+## 구현 완료 / 개선 예정
+
+구현 완료:
+
+- `gpclean/gpclean_submit/` 기반 Deadline 제출 패키지.
+- MayaBatch/Blender용 Deadline job/plugin info 생성.
+- PySide 로그인/제출 UI 구조와 제출 버튼 연결 흐름.
+- MongoDB auth/reservation 접근 코드.
+- Google Sheets 예약 데이터 동기화 스크립트.
+- NAS/UNC path, Worker, license, OCIO 관련 운영 문서.
+
+개선 예정:
+
+- 중복된 Blender package tree를 공통 패키지 구조로 정리.
+- Deadline 제출 정보 생성 테스트 추가.
+- UI에서 Deadline/MongoDB 상태 추적 개선.
+- redaction 처리한 스크린샷 예시 추가.
 
 ## Results
 
@@ -102,6 +123,8 @@ flowchart LR
 ├── docs/                       # Public documentation
 │   ├── project-timelog.md      # Sanitized graduation-project time log
 │   ├── project-timelog-ko.md   # Korean version of the sanitized time log
+│   ├── branch-guide.md         # Branch review / cleanup guide
+│   ├── security-cleanup.md     # Sensitive data cleanup guide
 │   └── technical_paper_redacted.pdf
 ├── diagrams/                   # Mermaid architecture/workflow sources
 └── screenshots/                # Placeholder guidance for future redacted screenshots
