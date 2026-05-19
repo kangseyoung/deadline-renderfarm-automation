@@ -127,7 +127,8 @@ flowchart LR
 │   ├── security-cleanup.md     # Sensitive data cleanup guide
 │   └── technical_paper_redacted.pdf
 ├── diagrams/                   # Mermaid architecture/workflow sources
-└── screenshots/                # Placeholder guidance for future redacted screenshots
+└── screenshots/                # Redacted public screenshots
+    └── renderfarm-usage-guide/ # Render farm usage guide screenshots
 ```
 
 ## Troubleshooting Highlights
@@ -171,3 +172,5 @@ redaction 처리한 공개용 기술 논문은 [docs/technical_paper_redacted.pd
 공개용으로 정리한 졸업 프로젝트 타임로그는 [영문](docs/project-timelog.md)과 [한국어](docs/project-timelog-ko.md) 버전으로 확인할 수 있습니다.
 
 프로젝트 발표 자료는 [Google Slides](https://docs.google.com/presentation/d/1aXf-YSAMTUuJI3glqOqilKSjnw-s2l35VXsNBPf0UpQ/edit?usp=sharing)에서 확인할 수 있습니다.
+
+렌더팜 사용가이드 스크린샷은 [screenshots/renderfarm-usage-guide/](screenshots/renderfarm-usage-guide/)에 정리합니다.

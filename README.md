@@ -116,7 +116,8 @@ Sanitized raw benchmark logs are not included in this public repository.
 │   ├── project-timelog-ko.md
 │   └── technical_paper_redacted.pdf
 ├── diagrams/                   # Mermaid architecture/workflow sources
-├── screenshots/                # Redacted screenshot area, currently minimal
+├── screenshots/                # Redacted public screenshots
+│   └── renderfarm-usage-guide/ # Render farm usage guide screenshots
 ├── .env.example                # Placeholder-only environment template
 └── README_ko.md                # Korean README
 ```
@@ -150,6 +151,7 @@ See [docs/security-cleanup.md](docs/security-cleanup.md) and [docs/security-note
 - [Project Timelog](docs/project-timelog.md)
 - [Korean Project Timelog](docs/project-timelog-ko.md)
 - [Project Presentation](https://docs.google.com/presentation/d/1aXf-YSAMTUuJI3glqOqilKSjnw-s2l35VXsNBPf0UpQ/edit?usp=sharing)
+- [Render Farm Usage Guide Screenshots](screenshots/renderfarm-usage-guide/)
 
 ## AI Usage
 
