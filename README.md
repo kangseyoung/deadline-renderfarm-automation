@@ -149,6 +149,7 @@ See [docs/security-cleanup.md](docs/security-cleanup.md) and [docs/security-note
 - [Security Cleanup](docs/security-cleanup.md)
 - [Project Timelog](docs/project-timelog.md)
 - [Korean Project Timelog](docs/project-timelog-ko.md)
+- [Project Presentation](https://docs.google.com/presentation/d/1aXf-YSAMTUuJI3glqOqilKSjnw-s2l35VXsNBPf0UpQ/edit?usp=sharing)
 
 ## AI Usage
 
