@@ -1,18 +1,19 @@
 # Render Farm Usage Guide Screenshots
 
-Place redacted screenshots for the render farm usage guide in this folder.
+This folder contains redacted screenshots for the render farm usage guide.
 
-Recommended naming:
+## Screenshot Order
 
-```text
-01-login.png
-02-reservation-check.png
-03-scene-selection.png
-04-render-settings.png
-05-submit-to-deadline.png
-06-deadline-monitor-status.png
-07-output-check.png
-```
+1. ![Submit settings overview](01-submit-settings-overview.jpg)
+2. ![License and reservation rules](02-license-reservation-rules.png)
+3. ![Maya scene check](03-maya-scene-check.png)
+4. ![Usage policy](04-usage-policy.png)
+5. ![Render farm usage flow](05-renderfarm-usage-flow.png)
+6. ![Path and submit flow](06-path-and-submit-flow.png)
+7. ![Deadline submit options](07-deadline-submit-options.png)
+8. ![Deadline Monitor check](08-deadline-monitor-check.png)
+9. ![Log review guidance](09-log-review-guidance.png)
+10. ![Feedback link redacted](10-feedback-link-redacted.png)
 
 Checklist before upload:
 
