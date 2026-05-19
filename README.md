@@ -101,6 +101,7 @@ The performance result is reported from the final technical paper; sanitized raw
 ├── userSetup.py                # DCC startup hook
 ├── docs/                       # Public documentation
 │   ├── project-timelog.md      # Sanitized graduation-project time log
+│   ├── project-timelog-ko.md   # Korean version of the sanitized time log
 │   └── technical_paper_redacted.pdf
 ├── diagrams/                   # Mermaid architecture/workflow sources
 └── screenshots/                # Placeholder guidance for future redacted screenshots
@@ -130,7 +131,7 @@ See [docs/security-notes.md](docs/security-notes.md).
 
 The redacted public technical paper is included at [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf). Private source material, raw logs, credentials, account details, infrastructure identifiers, and unredacted paper copies must remain outside this repository.
 
-The sanitized graduation-project time log is available at [docs/project-timelog.md](docs/project-timelog.md).
+The sanitized graduation-project time log is available in [English](docs/project-timelog.md) and [Korean](docs/project-timelog-ko.md).
 
 ## AI Usage
 

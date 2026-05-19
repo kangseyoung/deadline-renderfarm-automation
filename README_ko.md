@@ -101,6 +101,7 @@ flowchart LR
 ├── userSetup.py                # DCC startup hook
 ├── docs/                       # Public documentation
 │   ├── project-timelog.md      # Sanitized graduation-project time log
+│   ├── project-timelog-ko.md   # Korean version of the sanitized time log
 │   └── technical_paper_redacted.pdf
 ├── diagrams/                   # Mermaid architecture/workflow sources
 └── screenshots/                # Placeholder guidance for future redacted screenshots
@@ -144,4 +145,4 @@ AI는 다음 작업을 정리하는 데 도움을 주었습니다.
 
 redaction 처리한 공개용 기술 논문은 [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf)에 포함되어 있습니다. 비공개 원본 자료, 원본 로그, 자격 증명, 계정 정보, 인프라 식별자, redaction되지 않은 논문 원본은 이 저장소 밖에서 관리해야 합니다.
 
-공개용으로 정리한 졸업 프로젝트 타임로그는 [docs/project-timelog.md](docs/project-timelog.md)에서 확인할 수 있습니다.
+공개용으로 정리한 졸업 프로젝트 타임로그는 [영문](docs/project-timelog.md)과 [한국어](docs/project-timelog-ko.md) 버전으로 확인할 수 있습니다.
