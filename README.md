@@ -4,10 +4,26 @@ Deadline Render Farm Automation System is a graduation project focused on render
 
 This repository is the public portfolio snapshot. Private infrastructure values, raw logs, credentials, license details, unredacted screenshots, and original internal notes are intentionally excluded or redacted.
 
+## Main Code Review Guide
+
+The main portfolio source code is organized under `src/`.
+
+`src/` is a public portfolio snapshot for interviewer code review. It is not a replacement for the original runtime source tree. The original development snapshot is kept under `gpclean/` for project history and to avoid breaking existing imports or runtime behavior.
+
+| Area | Path | Description |
+|---|---|---|
+| Login / Submission UI | `src/ui/` | PySide-based login, file drop, and render submission UI |
+| Deadline Submission | `src/submission/` | Builds Deadline job/plugin info files and submits render jobs through `deadlinecommand SubmitJob` |
+| Reservation / Auth | `src/reservation/` | MongoDB-based reservation, authentication, and status data access |
+| Config | `src/config/` | Environment-based configuration placeholders |
+| Flow Entry Point | `src/main.py` | Review-friendly entry point that summarizes the end-to-end system flow |
+
+The original development snapshot is kept under `gpclean/` for project history.
+
 ## Portfolio Baseline
 
 - **Portfolio branch:** `main`
-- **What to review:** this README, `gpclean/`, `docs/architecture.md`, `docs/troubleshooting.md`, and `docs/implementation.md`
+- **What to review:** this README, `src/`, `docs/architecture.md`, `docs/troubleshooting.md`, and `docs/implementation.md`
 - **Branch note:** older `master`, `backup`, `final`, and experiment branches are kept only as development history unless stated otherwise. See [docs/branch-guide.md](docs/branch-guide.md).
 
 ## Project Focus
@@ -102,6 +118,14 @@ Sanitized raw benchmark logs are not included in this public repository.
 
 ```text
 .
+├── src/                        # Public portfolio source snapshot for code review
+│   ├── app_entry/              # Copied original app entry point for reference
+│   ├── ui/                     # PySide login, file-drop, and submission UI
+│   ├── submission/             # Deadline job/plugin info and SubmitJob logic
+│   ├── reservation/            # MongoDB auth/reservation access
+│   ├── config/                 # Environment placeholder settings
+│   ├── main.py                 # Review-friendly flow entry point
+│   └── README.md
 ├── gpclean/                    # Main Python source snapshot
 │   ├── gpclean_submit/         # Deadline submission package
 │   ├── ui/                     # Login, file-drop, and submission UI

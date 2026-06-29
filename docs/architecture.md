@@ -18,9 +18,31 @@ User
 
 ## Main Components
 
+## Public Source Snapshot Structure
+
+The review-friendly source layout is under `src/`.
+
+`src/` is a public portfolio snapshot for interview and code review. It does not replace the original runtime package under `gpclean/`. The original package is kept for project history and to avoid breaking existing imports.
+
+```text
+src/
+  app_entry/     # copied original application entry point for reference
+  ui/            # PySide UI layer
+  reservation/   # MongoDB auth/reservation access
+  submission/    # Deadline job/plugin info and SubmitJob logic
+  config/        # environment placeholder settings
+  main.py        # review-friendly system flow summary
+```
+
 ### PySide Submission UI
 
 The UI layer handles login, scene context, file selection, and render submission entry points. The public source snapshot includes the UI package under `gpclean/ui/`.
+
+In the `src/` snapshot, this maps to `src/ui/`.
+
+### UI Layer
+
+The UI layer includes PySide login, file drop, and render submission views/controllers. Qt Designer `.ui` files define widget layouts and are loaded by Python view/controller code.
 
 ### MongoDB Reservation/Auth Data
 
@@ -30,6 +52,12 @@ MongoDB is used for user authentication and reservation/status-related data. Con
 - `MONGODB_DATABASE`
 - `MONGODB_AUTH_COLLECTION`
 - `MONGODB_RESERVATION_COLLECTION`
+
+In the `src/` snapshot, this maps to `src/reservation/`.
+
+### Reservation/Auth Layer
+
+This layer checks user authentication and reservation data before a render job is submitted. Public examples use placeholders and environment variables instead of internal database values.
 
 ### Google Sheets Reservation Workflow
 
@@ -50,6 +78,12 @@ deadlinecommand SubmitJob <job_info> <plugin_info>
 
 The package includes Maya and Blender adapters for collecting scene file, frame range, renderer, version, output path, and camera data where available.
 
+In the `src/` snapshot, this maps to `src/submission/`.
+
+### Render Farm Worker Layer
+
+After submission, Deadline Workers pick up tasks from the Repository/Database, read scene data and assets, execute rendering, and write output to shared storage.
+
 ### Deadline Repository / Workers
 
 The final project used a Deadline Repository / Database / Worker model. The public repository does not include the full private Repository configuration or raw Worker logs, but the workflow is documented because it was central to the project.
@@ -64,6 +98,14 @@ Distributed rendering requires all Workers to resolve the same scene and output 
 ```
 
 These are placeholder examples only.
+
+### Storage/NAS Layer
+
+The storage layer provides shared input and output paths that must be reachable from UI machines and all Deadline Workers. Public docs use placeholder UNC paths only.
+
+### Status/Log Check Flow
+
+Operators check job state through Deadline Monitor, Worker status, task logs, and project troubleshooting notes. This closes the loop after submission and helps diagnose Worker, path, license, or render engine failures.
 
 ## Implemented vs. Private Deployment Artifacts
 
