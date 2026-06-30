@@ -1,176 +1,230 @@
-# Deadline 기반 렌더팜 자동화 시스템
+# Deadline Render Farm Automation System
 
-Phoenix Render Farm System은 공유 컴퓨터 실습실 환경을 위한 Deadline 기반 렌더팜 자동화 프로젝트입니다. 렌더 인프라, PySide 제출 UI, MongoDB 기반 사용자 및 예약 데이터, Google Sheets 예약 운영, NAS 공유 스토리지 정책, 그리고 DCC별 Maya/Arnold 및 Blender 제출 흐름을 통합합니다.
+[![portfolio-check](https://github.com/kangseyoung/deadline-renderfarm-automation/actions/workflows/portfolio-check.yml/badge.svg)](https://github.com/kangseyoung/deadline-renderfarm-automation/actions/workflows/portfolio-check.yml)
 
-이 저장소는 캡스톤 프로젝트의 공개용 안전 소스 스냅샷과 문서를 포함합니다. 보안을 위해 일부 배포 스크립트와 원본 운영 로그는 제외되었거나 redaction 처리되었습니다.
+Deadline Render Farm Automation System은 졸업 프로젝트로 진행한 온프레미스 렌더팜 자동화 프로젝트입니다. PySide 기반 제출 UI, MongoDB 기반 예약/인증 데이터, NAS 공유 경로 정책, AWS Thinkbox Deadline 제출 흐름을 연결해 Maya/Arnold와 Blender 렌더 작업을 실습실 환경에서 사용할 수 있도록 구성했습니다.
 
-기술 논문에 보고된 최종 평가에서는, 단일 PC에서 약 **9h 10m**이 걸리던 240프레임 씬이 **20대 Deadline Worker**를 사용해 약 **26-32m**에 완료되었습니다.
+이 저장소는 공개 포트폴리오용 스냅샷입니다. 실제 인프라 값, 원본 로그, 계정 정보, 라이선스 정보, 내부 경로, 민감한 스크린샷은 제외하거나 placeholder로 대체했습니다.
 
-## Overview
+## Main Code Review Guide
 
-이 프로젝트는 VFX 파이프라인 문제를 다룹니다. 여러 사용자가 고정된 실습실 장비 풀에서 대형 Maya 또는 Blender 씬을 렌더링해야 하지만, 수동 렌더링은 경로 오류, 라이선스 충돌, 불공정한 장비 사용, 실습실 PC 초기화 이후 반복적인 설정 작업을 유발합니다.
+면접관이 먼저 보면 좋은 핵심 코드는 `src/` 아래에 정리되어 있습니다.
 
-이 저장소에는 공개 문서와 제출 측 도구의 소스 스냅샷이 포함되어 있습니다. redaction 처리한 공개용 기술 논문은 [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf)에서 확인할 수 있습니다.
+`src/`는 코드 리뷰를 쉽게 하기 위해 재구성한 public portfolio snapshot입니다. 원본 실행 구조를 대체하는 폴더가 아니며, 기존 개발 구조는 import와 실행 흐름을 보존하기 위해 `gpclean/` 아래에 유지되어 있습니다.
 
-채용 담당자 또는 리뷰어는 `main` 브랜치와 이 README를 기준으로 보면 됩니다. 오래된 `master`, `backup`, `final` 계열 브랜치 정리 기준은 [docs/branch-guide.md](docs/branch-guide.md)에 정리했습니다.
+| Area | Path | Description |
+|---|---|---|
+| Public Source Snapshot | `src/` | 면접/포트폴리오 코드 리뷰용으로 재구성한 핵심 코드 |
+| Login / Submission UI | `src/ui/` | PySide 기반 로그인, 파일 드롭, 렌더 제출 UI |
+| Deadline Submission | `src/submission/` | Deadline `job_info` / `plugin_info` 생성 및 `deadlinecommand SubmitJob` 호출 흐름 |
+| Reservation / Auth | `src/reservation/` | MongoDB 기반 예약, 인증, 상태 데이터 접근 |
+| Config | `src/config/` | 환경변수 기반 placeholder 설정 |
+| Flow Entry Point | `src/main.py` | 전체 시스템 흐름을 보여주는 리뷰용 entry point |
+| Original Development Tree | `gpclean/` | 프로젝트 히스토리와 원본 실행 구조 보존 |
 
-## Problem
+> Note: `src/`는 코드 리뷰용 public portfolio snapshot입니다.  
+> 원본 개발 구조는 `gpclean/` 아래에 보존되어 있습니다.
 
-이 시스템 이전에는 렌더링이 개별 PC 설정과 수동 조율에 크게 의존했습니다.
+## My Contributions
 
-- 씬 파일과 에셋이 항상 일관된 공유 경로를 통해 제공되지 않았습니다.
-- 장비마다 경로, OCIO 설정, 라이선스 변수가 달라 MayaBatch 및 Arnold 작업이 실패할 수 있었습니다.
-- 예약과 사용 제어가 렌더 제출 워크플로우 밖에서 처리되었습니다.
-- 학생들이 실습실에 과밀되어 병목현상이 발생하였습니다.
+- PySide UI에서 Deadline `SubmitJob`까지 이어지는 렌더 제출 흐름을 설계하고 문서화했습니다.
+- Maya/Arnold와 Blender 워크플로우를 위한 Deadline `job_info` / `plugin_info` 생성 로직을 구현하고 공개 리뷰용 구조로 정리했습니다.
+- MongoDB 기반 예약/인증 데이터와 렌더 제출 흐름을 연결했습니다.
+- Worker 상태, NAS 경로 정책, MongoDB 예약/인증, 라이선스/경로 문제 등 운영 중 발생할 수 있는 이슈를 troubleshooting 문서로 정리했습니다.
+- 공개 포트폴리오에 맞게 민감한 인프라 값을 제거하고 리뷰 가능한 코드와 문서를 분리했습니다.
 
-## Solution
+## Portfolio Baseline
 
-최종 시스템은 인프라 자동화 워크플로우로 설계되고 문서화되었습니다.
+- **Portfolio branch:** `main`
+- **먼저 볼 위치:** `README.md`, `README_ko.md`, `src/`, `docs/architecture.md`, `docs/troubleshooting.md`, `docs/operations-runbook.md`
+- **추천 리뷰 대상:** `src/`, `docs/architecture.md`, `docs/troubleshooting.md`, `gpclean/`
+- **브랜치 안내:** 예전 `master`, `backup`, `final` 계열 브랜치는 개발 히스토리 용도입니다. 자세한 내용은 [docs/branch-guide.md](docs/branch-guide.md)를 참고하면 됩니다.
 
-- 분산 렌더링을 위한 Deadline Repository, Database, Worker 모델.
-- 병렬 프레임 처리를 위해 구성된 20대 Worker PC. 이 내용은 기술 논문에 문서화되어 있습니다.
-- 씬 입력과 렌더 출력에 대한 UNC 경로 정책을 적용한 NAS 기반 공유 스토리지.
-- 로그인, 씬 컨텍스트, 렌더 제출 흐름을 위한 PySide 기반 UI.
-- 인증 및 예약/상태 데이터를 위한 MongoDB 컬렉션.
-- 공유 실습실 스케줄링을 위한 Google Sheets / Google Apps Script 예약 프로세스. 이 내용은 기술 논문에 문서화되어 있습니다.
-- MayaBatch/Arnold 및 Blender 작업을 위한 Deadline command 제출 지원.
-- 라이선스, OCIO, NAS, Worker, 경로 장애를 위한 운영 트러블슈팅 프로세스.
+## Project Focus
 
-공개 소스 스냅샷에는 PySide/MongoDB/Deadline 제출 측 코드가 포함되어 있습니다. 비공개 Apps Script 프로젝트, 원본 Deadline 로그, 전체 Deadline Repository 설정, 비공개 배포 스크립트는 포함되어 있지 않습니다.
+이 프로젝트는 단순한 VFX 도구가 아니라, 공유 실습실 환경에서 사용할 수 있는 렌더팜 운영 자동화 흐름을 직접 구성하고 검증한 프로젝트입니다.
 
-## System Architecture
+- Deadline Repository / Database / Worker 기반 렌더팜 구조
+- NAS 공유 경로 기반의 입력/출력 파일 정책
+- MayaBatch/Arnold 및 Blender 렌더 제출 흐름
+- PySide 기반 로그인 및 제출 UI
+- MongoDB 기반 예약/인증/상태 데이터 처리
+- Deadline `SubmitJob` 명령 연동
+- Worker, 라이선스, OCIO, NAS, 경로 문제에 대한 운영 및 장애 대응 문서화
+
+## Implemented in This Repository
+
+- **Deadline job submission package:** `gpclean/gpclean_submit/`
+  - Deadline `job_info`와 `plugin_info` 파일 생성
+  - `deadlinecommand SubmitJob` 호출
+  - MayaBatch와 Blender plugin info 생성 지원
+  - DCC별 장면 파일, 프레임 범위, 렌더러, 출력 경로 메타데이터 처리
+- **PySide UI flow:** `gpclean/ui/`
+  - 로그인 UI와 제출 UI 구조
+  - 파일 드롭과 장면 컨텍스트 전달 흐름
+  - 제출 버튼에서 Deadline 제출 레이어로 이어지는 흐름
+- **MongoDB integration:** `gpclean/backend/authDB/`
+  - 환경변수 기반 MongoDB 접근
+  - 예약/인증 컬렉션 접근 로직
+- **Public source snapshot:** `src/`
+  - 면접관이 핵심 코드를 빠르게 확인할 수 있도록 UI, 제출, 예약/인증, 설정 영역을 분리
+- **Documentation:**
+  - 아키텍처, 운영 런북, troubleshooting, 보안 정리, 브랜치 가이드, 공개용 프로젝트 타임로그
+
+## Implemented / Documented Outside the Public Snapshot
+
+아래 항목은 최종 프로젝트에서 다뤘거나 문서화했지만, 민감정보가 포함될 수 있어 공개 원본은 포함하지 않습니다.
+
+- 전체 Deadline Repository / Database 서버 설정
+- 비공개 Google Apps Script 프로젝트
+- 원본 Deadline 로그와 benchmark 로그
+- 실제 NAS 경로, 장비명, IP 주소, 라이선스 서버 값, 계정 데이터
+- redaction 처리되지 않은 스크린샷과 내부 노트
+
+## Public-Safe Tests and CI
+
+이 저장소에는 외부 Deadline, MongoDB, NAS, Maya, Blender 없이 실행 가능한 공개용 smoke test가 포함되어 있습니다.
+
+- `tests/test_public_snapshot.py`
+  - `src/`, `.env.example`, 주요 문서 파일 존재 여부 확인
+  - `src/main.py`, `src/submission/`, `src/reservation/`의 Python 파일을 import하지 않고 `ast.parse()`로 문법 검사
+- `.github/workflows/portfolio-check.yml`
+  - push / pull request 시 Python 3.11에서 pytest 실행
+  - 공개 문서와 source snapshot에 숫자 IP가 들어갔는지 간단 점검
+  - workflow 파일 자체의 정규식이 false positive로 잡히지 않도록 `.github` 폴더는 IP grep 대상에서 제외
+
+## Planned Improvements
+
+- 오래된 Blender 쪽 중복 package tree를 공통 package 구조로 정리
+- 현재 public-safe smoke test를 `job_info` / `plugin_info` 생성 로직에 대한 더 깊은 unit test로 확장
+- `deadlinecommand` 호출 전 로컬 검증을 위한 안전한 CLI wrapper 추가
+- UI에서 Deadline/MongoDB 상태 추적 개선
+- redaction 검토가 끝난 예시 스크린샷 추가
+
+## Architecture
 
 ```mermaid
 flowchart LR
-    User[User] --> Sheet[Google Sheets Reservation]
+    User[User] --> UI[PySide Submission UI]
+    User --> Sheet[Google Sheets Reservation]
     Sheet --> GAS[Google Apps Script]
     GAS --> Mongo[(MongoDB)]
-    User --> UI[PySide Submission UI]
     UI --> Mongo
-    UI --> DeadlineCmd[deadlinecommand SubmitJob]
-    DeadlineCmd --> Repo[Deadline Repository]
+    UI --> Submit[Deadline SubmitJob]
+    Submit --> Repo[Deadline Repository]
     Repo --> DDB[(Deadline Database)]
-    Repo --> Workers[20 Deadline Workers]
+    Repo --> Workers[Deadline Workers]
     Workers --> NAS[NAS Shared Storage]
     NAS --> Output[Rendered Output]
     Workers --> Monitor[Deadline Monitor]
 ```
 
-이 다이어그램은 기술 논문에 설명된 설계/배포 시스템을 나타냅니다. 모든 배포 구성요소가 이 공개 스냅샷에 소스 코드로 포함되어 있는 것은 아닙니다. 자세한 내용은 [docs/architecture.md](docs/architecture.md)와 [diagrams/](diagrams/)의 Mermaid 소스를 참고하세요.
+자세한 구조는 [docs/architecture.md](docs/architecture.md)에 정리되어 있습니다.
 
 ## Tech Stack
 
-- Render management: AWS Thinkbox Deadline 10.4
-- DCC/rendering: MayaBatch, Arnold, Blender
-- UI: Python, PySide6 with PySide2 fallback in code
-- Data: MongoDB, pymongo
-- Reservation operations: Google Sheets, Google Apps Script, Google Sheets API. Apps Script는 논문에 문서화되어 있지만 공개 소스로는 포함되어 있지 않습니다.
-- Storage: NAS shared storage with UNC path policy
-- Platform: Windows lab PCs with Deep Freeze constraints
-
-## Key Features
-
-- 예약 우선 렌더팜 워크플로우.
-- MongoDB 기반 로그인 및 예약 조회.
-- MayaBatch 및 Blender를 위한 Deadline `job_info` / `plugin_info` 생성.
-- `deadlinecommand SubmitJob` 기반 Deadline 제출 흐름.
-- 씬 파일, 프레임 범위, 렌더러, 버전, 출력 경로, 카메라 데이터를 수집하는 DCC 어댑터.
-- 씬 경로와 프레임 범위에 대한 preflight 검사.
-- Worker 상태 확인, Deadline 로그 리뷰, 오류 기록을 위한 운영 패턴.
-- 인프라 식별자와 자격 증명을 redaction 처리한 공개 문서.
-
-## 구현 완료 / 개선 예정
-
-구현 완료:
-
-- `gpclean/gpclean_submit/` 기반 Deadline 제출 패키지.
-- MayaBatch/Blender용 Deadline job/plugin info 생성.
-- PySide 로그인/제출 UI 구조와 제출 버튼 연결 흐름.
-- MongoDB auth/reservation 접근 코드.
-- Google Sheets 예약 데이터 동기화 스크립트.
-- NAS/UNC path, Worker, license, OCIO 관련 운영 문서.
-
-개선 예정:
-
-- 중복된 Blender package tree를 공통 패키지 구조로 정리.
-- Deadline 제출 정보 생성 테스트 추가.
-- UI에서 Deadline/MongoDB 상태 추적 개선.
-- redaction 처리한 스크린샷 예시 추가.
+- **Language/UI:** Python, PySide6/PySide2
+- **Render management:** AWS Thinkbox Deadline 10
+- **DCC/rendering:** MayaBatch, Arnold, Blender
+- **Data:** MongoDB, Google Sheets API
+- **Automation:** Deadline command-line submission, Google Apps Script workflow documentation
+- **Storage/infra:** NAS shared storage, UNC path policy, Windows lab PCs
+- **Quality check:** pytest 기반 public-safe smoke test, GitHub Actions
 
 ## Results
 
-최종 논문은 20대 Worker PC에서의 평가 결과를 보고합니다.
+최종 기술 논문에서는 20대 Worker PC 기반 평가 결과를 보고했습니다.
 
-- 240프레임 씬의 단일 PC 렌더 시간: 약 9h 10m.
-- 20-Worker 렌더팜 완료 시간: 약 26-32m.
-- 보고된 전체 개선 폭: 테스트 씬의 총 완료 시간 기준 약 17-20x.
+- 240프레임 장면의 단일 PC 렌더 시간: 약 9h 10m
+- 20-Worker 렌더팜 완료 시간: 약 26-32m
+- 테스트 장면 기준 전체 완료 시간 약 17-20x 개선
 
-이 성능 결과는 최종 기술 논문에서 보고된 내용입니다. Sanitized raw benchmark log는 이 공개 스냅샷에 포함되어 있지 않습니다. 따라서 정확한 수치를 재현하려면 redaction된 벤치마크 산출물을 통한 검증이 필요합니다.
+공개 저장소에는 redaction되지 않은 원본 benchmark 로그를 포함하지 않습니다.
 
 ## Repository Structure
 
 ```text
 .
-├── gpclean/                    # Main Python package
-│   ├── main.py                 # PySide UI launch path
-│   ├── ui/                     # Login, submitter, file-drop UI
-│   ├── backend/authDB/         # MongoDB auth/reservation scripts
-│   └── gpclean_submit/         # Deadline submission package
-├── blender/gpclean/            # Blender-oriented duplicated package tree
-├── ShaderMain.py               # Maya shader helper script
-├── ShaderSetup.py              # Maya shader helper implementation
-├── userSetup.py                # DCC startup hook
-├── docs/                       # Public documentation
-│   ├── project-timelog.md      # Sanitized graduation-project time log
-│   ├── project-timelog-ko.md   # Korean version of the sanitized time log
-│   ├── branch-guide.md         # Branch review / cleanup guide
-│   ├── security-cleanup.md     # Sensitive data cleanup guide
-│   └── technical_paper_redacted.pdf
-├── diagrams/                   # Mermaid architecture/workflow sources
-└── screenshots/                # Redacted public screenshots
-    └── renderfarm-usage-guide/ # Render farm usage guide screenshots
+|-- src/                         # Public portfolio source snapshot for code review
+|   |-- app_entry/               # Copied original app entry point for reference
+|   |-- ui/                      # PySide login, file-drop, and submission UI
+|   |-- submission/              # Deadline job/plugin info and SubmitJob logic
+|   |-- reservation/             # MongoDB auth/reservation access
+|   |-- config/                  # Environment placeholder settings
+|   |-- main.py                  # Review-friendly flow entry point
+|   `-- README.md
+|-- gpclean/                     # Original development source tree
+|   |-- gpclean_submit/          # Deadline submission package
+|   |-- ui/                      # Login, file-drop, and submission UI
+|   `-- backend/authDB/          # MongoDB/auth/reservation scripts
+|-- blender/gpclean/             # Older Blender-oriented duplicated package tree
+|-- docs/                        # Public documentation
+|   |-- architecture.md
+|   |-- operations-runbook.md
+|   |-- troubleshooting.md
+|   |-- branch-guide.md
+|   |-- security-cleanup.md
+|   |-- project-timelog.md
+|   `-- project-timelog-ko.md
+|-- tests/                       # Public-safe smoke tests
+|-- .github/workflows/           # GitHub Actions workflow
+|-- diagrams/                    # Mermaid architecture/workflow sources
+|-- screenshots/                 # Redacted public screenshots
+|-- .env.example                 # Placeholder-only environment template
+|-- README.md                    # English README
+`-- README_ko.md                 # Korean README
 ```
 
-## Troubleshooting Highlights
+## Configuration
 
-일반적인 운영 장애 지점은 다음 범주로 문서화되었습니다.
+`.env.example`을 개인 로컬 `.env` 파일로 복사한 뒤 placeholder를 로컬 환경에 맞게 바꿔 사용합니다. `.env`, credential, service-account JSON, 라이선스 파일, 실제 서버 경로, IP 주소, 내부 정보가 포함된 스크린샷은 절대 커밋하지 않습니다.
 
-- MongoDB 연결 또는 bind/firewall 문제.
-- Deadline Repository 또는 공유 경로 접근 실패.
-- 오프라인 Worker 또는 잘못 구성된 Worker 권한.
-- Arnold 라이선스 환경 문제.
-- MayaBatch의 OCIO 설정 오류.
-- NAS/UNC 경로 불일치.
-- 사용자 씬/출력 경로 오류.
+주요 환경변수 예시는 다음과 같습니다.
 
-자세한 내용은 [docs/troubleshooting.md](docs/troubleshooting.md)를 참고하세요.
+- `MONGODB_URI`
+- `DEADLINE_COMMAND`
+- `DEADLINE_REPOSITORY`
+- `NAS_ROOT`
+- `GOOGLE_SERVICE_ACCOUNT_JSON`
+- `ARNOLD_LICENSE_SERVER`
+- `OCIO_CONFIG`
+
+## Operations and Troubleshooting
+
+운영 관점의 점검 흐름은 [docs/operations-runbook.md](docs/operations-runbook.md)에 정리했습니다.
+
+주요 troubleshooting 범위는 다음과 같습니다.
+
+- MongoDB 연결 또는 bind/firewall 문제
+- Deadline Repository 또는 공유 경로 접근 실패
+- Worker offline 상태 또는 잘못된 Worker 설정
+- Arnold 라이선스 환경 문제
+- MayaBatch/OCIO 설정 오류
+- NAS/UNC 경로 불일치
+- 사용자 입력 또는 출력 경로 오류
+
+자세한 내용은 [docs/troubleshooting.md](docs/troubleshooting.md)를 참고하면 됩니다.
 
 ## Security Notes
 
-이 공개 저장소에는 실제 IP 주소, NAS 경로, 라이선스 서버, MongoDB URI, Google Sheet URL, 비밀번호, API 키, student ID, private account name, internal server name이 포함되면 안 됩니다. 공개 문서는 `<nas-server-ip>`, `<license-server-ip>`, `<mongodb-uri>`, `<google-sheet-url>`, `<student-id>`, `<internal-path>`, `<internal-server-name>`, `<private-account>`, `<secret>` 같은 placeholder를 사용합니다.
+이 공개 저장소에는 실제 IP 주소, NAS 경로, 라이선스 서버, MongoDB URI, Google Sheet URL, 비밀번호, API key, student ID, private account name, internal server name을 포함하지 않습니다.
 
-자세한 내용은 [docs/security-notes.md](docs/security-notes.md)를 참고하세요.
+공개 문서와 예시는 `<nas-server-ip>`, `<license-server-ip>`, `<mongodb-uri>`, `<google-sheet-url>`, `<student-id>`, `<internal-path>`, `<internal-server-name>`, `<private-account>`, `<secret>` 같은 placeholder를 사용합니다.
 
-## AI 활용 방식
+자세한 내용은 [docs/security-cleanup.md](docs/security-cleanup.md)와 [docs/security-notes.md](docs/security-notes.md)를 참고하면 됩니다.
 
-이 프로젝트에서는 AI를 단순 코드 생성 도구가 아니라 개발 보조 도구로 활용했습니다. 프로젝트 요구사항, VFX 파이프라인 제약, Deadline 기반 렌더팜 흐름, 공개 문서화 범위는 직접 정의했고, AI가 제안한 내용은 실제 코드와 프로젝트 맥락에 맞게 검토하고 수정했습니다.
+## Documentation
 
-AI는 다음 작업을 정리하는 데 도움을 주었습니다.
+- [Architecture](docs/architecture.md)
+- [Operations Runbook](docs/operations-runbook.md)
+- [Troubleshooting](docs/troubleshooting.md)
+- [Branch Guide](docs/branch-guide.md)
+- [Security Cleanup](docs/security-cleanup.md)
+- [Project Timelog](docs/project-timelog.md)
+- [Korean Project Timelog](docs/project-timelog-ko.md)
+- [Project Presentation](https://docs.google.com/presentation/d/1aXf-YSAMTUuJI3glqOqilKSjnw-s2l35VXsNBPf0UpQ/edit?usp=sharing)
+- [Render Farm Usage Guide Screenshots](screenshots/renderfarm-usage-guide/)
 
-- Deadline, PySide, MongoDB, Google Sheets, NAS, Maya/Arnold, Blender로 이어지는 시스템 구조 아이디어 정리
-- 공개 포트폴리오용 README와 문서 구조 초안 작성 및 보안 정보 redaction 기준 검토
-- DCC 어댑터, Deadline job/plugin info 생성, 경로 처리, preflight check 등 반복적인 Python 구현 패턴 검토
-- Deadline Worker, MayaBatch, Arnold 라이선스, OCIO, NAS 경로 문제와 같은 오류 유형 분석 및 디버깅 방향 정리
-- 렌더 제출 워크플로의 리팩토링 방향과 검증 체크리스트 작성
+## AI Usage
 
-최종 문서와 코드 설명은 저장소의 공개 소스, 문서, 실제 프로젝트 맥락을 기준으로 직접 확인한 뒤 반영했습니다.
-
-## Paper
-
-redaction 처리한 공개용 기술 논문은 [docs/technical_paper_redacted.pdf](docs/technical_paper_redacted.pdf)에 포함되어 있습니다. 비공개 원본 자료, 원본 로그, 자격 증명, 계정 정보, 인프라 식별자, redaction되지 않은 논문 원본은 이 저장소 밖에서 관리해야 합니다.
-
-공개용으로 정리한 졸업 프로젝트 타임로그는 [영문](docs/project-timelog.md)과 [한국어](docs/project-timelog-ko.md) 버전으로 확인할 수 있습니다.
-
-프로젝트 발표 자료는 [Google Slides](https://docs.google.com/presentation/d/1aXf-YSAMTUuJI3glqOqilKSjnw-s2l35VXsNBPf0UpQ/edit?usp=sharing)에서 확인할 수 있습니다.
-
-렌더팜 사용가이드 스크린샷은 [screenshots/renderfarm-usage-guide/](screenshots/renderfarm-usage-guide/)에 정리합니다.
+AI는 개발 및 문서화 보조 도구로 사용했습니다. 시스템 요구사항, 렌더팜 운영 흐름, VFX/실습실 제약, 공개 문서 범위는 직접 정의했고, AI가 제안한 내용은 실제 프로젝트 맥락과 코드 기준으로 검토하고 수정했습니다.
