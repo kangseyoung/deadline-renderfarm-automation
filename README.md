@@ -185,6 +185,7 @@ See [docs/security-cleanup.md](docs/security-cleanup.md) and [docs/security-note
 ## Documentation
 
 - [Architecture](docs/architecture.md)
+- [Operations Runbook](docs/operations-runbook.md)
 - [Troubleshooting](docs/troubleshooting.md)
 - [Branch Guide](docs/branch-guide.md)
 - [Security Cleanup](docs/security-cleanup.md)
