@@ -1,5 +1,7 @@
 # Deadline Render Farm Automation System
 
+[![portfolio-check](https://github.com/kangseyoung/deadline-renderfarm-automation/actions/workflows/portfolio-check.yml/badge.svg)](https://github.com/kangseyoung/deadline-renderfarm-automation/actions/workflows/portfolio-check.yml)
+
 Deadline Render Farm Automation System is a graduation project focused on render-farm infrastructure, render submission automation, and lab-scale operation. It connects a PySide-based submission UI, MongoDB reservation/auth data, NAS shared-path policy, and Deadline job submission for Maya/Arnold and Blender workflows.
 
 On-premise Deadline render farm automation with PySide UI, MongoDB reservation/auth, Deadline job submission, NAS workflow, and troubleshooting documentation.
@@ -24,6 +26,14 @@ The main portfolio source code is organized under `src/`.
 
 > Note: `src/` is a public portfolio snapshot reorganized for code review.  
 > The original development structure is preserved under `gpclean/`.
+
+## My Contributions
+
+- Designed and documented a public-safe render submission flow from PySide UI to Deadline `SubmitJob`.
+- Implemented/reorganized Deadline `job_info` and `plugin_info` generation logic for Maya/Arnold and Blender workflows.
+- Connected the submission flow with MongoDB-based reservation/auth data handling.
+- Documented operation and troubleshooting cases around Worker status, NAS path policy, MongoDB reservation/auth, license/path issues, and render-farm usage.
+- Prepared a redacted public portfolio snapshot by separating reviewable source code from private infrastructure values.
 
 ## Portfolio Baseline
 
@@ -76,7 +86,7 @@ Some deployment pieces are documented from the final project but are not publish
 ## Planned Improvements
 
 - Replace older duplicated Blender-side package code with one shared package layout.
-- Add automated tests for `job_info` / `plugin_info` generation.
+- Expand current public-safe smoke tests into deeper unit tests for `job_info` / `plugin_info` generation.
 - Add a safer CLI wrapper for local validation before calling `deadlinecommand`.
 - Improve status polling from Deadline/MongoDB into the UI.
 - Add sanitized example screenshots after redaction review.

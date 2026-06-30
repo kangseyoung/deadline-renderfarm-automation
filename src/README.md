@@ -7,6 +7,12 @@ This folder is the core public source snapshot for the Deadline Render Farm Auto
 
 It is organized for portfolio and interview review. It does not replace the original runtime structure under `gpclean/`. Some imports may still refer to the original package layout because the goal is to make the main code areas easy to review without risky refactoring.
 
+## Review Mode vs Runtime Mode
+
+- Review Mode: use `src/` to inspect the main code areas for portfolio/interview review.
+- Runtime Mode: the original executable project structure remains under `gpclean/`.
+- Some imports may still reference the original package layout because `src/` was reorganized for safe code review, not as a risky full refactor.
+
 ## Folder Structure
 
 - `ui/`: PySide-based login UI, file drop UI, and render submission UI
