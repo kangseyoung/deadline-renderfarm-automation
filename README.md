@@ -2,6 +2,8 @@
 
 Deadline Render Farm Automation System is a graduation project focused on render-farm infrastructure, render submission automation, and lab-scale operation. It connects a PySide-based submission UI, MongoDB reservation/auth data, NAS shared-path policy, and Deadline job submission for Maya/Arnold and Blender workflows.
 
+On-premise Deadline render farm automation with PySide UI, MongoDB reservation/auth, Deadline job submission, NAS workflow, and troubleshooting documentation.
+
 This repository is the public portfolio snapshot. Private infrastructure values, raw logs, credentials, license details, unredacted screenshots, and original internal notes are intentionally excluded or redacted.
 
 ## Main Code Review Guide
@@ -12,18 +14,22 @@ The main portfolio source code is organized under `src/`.
 
 | Area | Path | Description |
 |---|---|---|
+| Public Source Snapshot | `src/` | Reorganized code review snapshot for interviewers |
 | Login / Submission UI | `src/ui/` | PySide-based login, file drop, and render submission UI |
 | Deadline Submission | `src/submission/` | Builds Deadline job/plugin info files and submits render jobs through `deadlinecommand SubmitJob` |
 | Reservation / Auth | `src/reservation/` | MongoDB-based reservation, authentication, and status data access |
 | Config | `src/config/` | Environment-based configuration placeholders |
 | Flow Entry Point | `src/main.py` | Review-friendly entry point that summarizes the end-to-end system flow |
+| Original Development Tree | `gpclean/` | Original project structure kept for history |
 
-The original development snapshot is kept under `gpclean/` for project history.
+> Note: `src/` is a public portfolio snapshot reorganized for code review.  
+> The original development structure is preserved under `gpclean/`.
 
 ## Portfolio Baseline
 
 - **Portfolio branch:** `main`
 - **What to review:** this README, `src/`, `docs/architecture.md`, `docs/troubleshooting.md`, and `docs/implementation.md`
+- **Recommended review target:** `src/`, `docs/architecture.md`, `docs/troubleshooting.md`, and `gpclean/` for original development history.
 - **Branch note:** older `master`, `backup`, `final`, and experiment branches are kept only as development history unless stated otherwise. See [docs/branch-guide.md](docs/branch-guide.md).
 
 ## Project Focus
