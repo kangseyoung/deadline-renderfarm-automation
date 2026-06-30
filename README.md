@@ -39,7 +39,7 @@ The main portfolio source code is organized under `src/`.
 
 - **Portfolio branch:** `main`
 - **What to review:** this README, `src/`, `docs/architecture.md`, `docs/troubleshooting.md`, and `docs/implementation.md`
-- **Recommended review target:** `src/`, `docs/architecture.md`, `docs/troubleshooting.md`, and `gpclean/` for original development history.
+- **Recommended review target:** `src/`, `docs/architecture.md`, `docs/operations-runbook.md`, `docs/troubleshooting.md`, `docs/implementation.md`, and `gpclean/` for original development history.
 - **Branch note:** older `master`, `backup`, `final`, and experiment branches are kept only as development history unless stated otherwise. See [docs/branch-guide.md](docs/branch-guide.md).
 
 ## Project Focus
@@ -134,32 +134,36 @@ Sanitized raw benchmark logs are not included in this public repository.
 
 ```text
 .
-├── src/                        # Public portfolio source snapshot for code review
-│   ├── app_entry/              # Copied original app entry point for reference
-│   ├── ui/                     # PySide login, file-drop, and submission UI
-│   ├── submission/             # Deadline job/plugin info and SubmitJob logic
-│   ├── reservation/            # MongoDB auth/reservation access
-│   ├── config/                 # Environment placeholder settings
-│   ├── main.py                 # Review-friendly flow entry point
-│   └── README.md
-├── gpclean/                    # Main Python source snapshot
-│   ├── gpclean_submit/         # Deadline submission package
-│   ├── ui/                     # Login, file-drop, and submission UI
-│   └── backend/authDB/         # MongoDB/auth/reservation scripts
-├── blender/gpclean/            # Older Blender-oriented duplicated package tree
-├── docs/                       # Public documentation
-│   ├── architecture.md
-│   ├── branch-guide.md
-│   ├── security-cleanup.md
-│   ├── troubleshooting.md
-│   ├── project-timelog.md
-│   ├── project-timelog-ko.md
-│   └── technical_paper_redacted.pdf
-├── diagrams/                   # Mermaid architecture/workflow sources
-├── screenshots/                # Redacted public screenshots
-│   └── renderfarm-usage-guide/ # Render farm usage guide screenshots
-├── .env.example                # Placeholder-only environment template
-└── README_ko.md                # Korean README
+|-- src/                         # Public portfolio source snapshot for code review
+|   |-- app_entry/               # Copied original app entry point for reference
+|   |-- ui/                      # PySide login, file-drop, and submission UI
+|   |-- submission/              # Deadline job/plugin info and SubmitJob logic
+|   |-- reservation/             # MongoDB auth/reservation access
+|   |-- config/                  # Environment placeholder settings
+|   |-- main.py                  # Review-friendly flow entry point
+|   `-- README.md
+|-- gpclean/                     # Main Python source snapshot
+|   |-- gpclean_submit/          # Deadline submission package
+|   |-- ui/                      # Login, file-drop, and submission UI
+|   `-- backend/authDB/          # MongoDB/auth/reservation scripts
+|-- blender/gpclean/             # Older Blender-oriented duplicated package tree
+|-- docs/                        # Public documentation
+|   |-- architecture.md
+|   |-- operations-runbook.md
+|   |-- implementation.md
+|   |-- branch-guide.md
+|   |-- security-cleanup.md
+|   |-- troubleshooting.md
+|   |-- project-timelog.md
+|   |-- project-timelog-ko.md
+|   `-- technical_paper_redacted.pdf
+|-- diagrams/                    # Mermaid architecture/workflow sources
+|-- screenshots/                 # Redacted public screenshots
+|   `-- renderfarm-usage-guide/  # Render farm usage guide screenshots
+|-- tests/                       # Public-safe smoke tests
+|-- .github/workflows/           # GitHub Actions workflow
+|-- .env.example                 # Placeholder-only environment template
+`-- README_ko.md                 # Korean README
 ```
 
 ## Configuration
